@@ -1,0 +1,151 @@
+﻿@page
+@model TVU.MedicalBooking.Pages.Patient.PaymentModel
+@{
+    ViewData["Title"] = "Thanh toán";
+}
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-qrcode"></i> Thanh Toán Qua QR Code
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    @if (Model.Payment != null && Model.Payment.Appointment != null)
+                    {
+                        <!-- Payment Info -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h5 class="border-bottom pb-2">Thông tin thanh toán</h5>
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td><strong>Mã thanh toán:</strong></td>
+                                        <td>#@Model.Payment.PaymentId</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Dịch vụ:</strong></td>
+                                        <td>@(Model.Payment.Appointment?.Service?.ServiceName ?? "N/A")</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Bác sĩ:</strong></td>
+                                        <td>BS. @(Model.Payment.Appointment?.Doctor?.User?.FullName ?? "N/A")</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Ngày khám:</strong></td>
+                                        <td>
+                                            @if (Model.Payment.Appointment != null)
+                                            {
+                                                @Model.Payment.Appointment.AppointmentDate.ToString("dd/MM/yyyy")
+                                                <text> - </text>
+                                                @Model.Payment.Appointment.TimeSlot
+                                            }
+                                            else
+                                            {
+                                                <text>N/A</text>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Số tiền:</strong></td>
+                                        <td>
+                                            <h4 class="text-success mb-0">
+                                                @Model.Payment.Amount?.ToString("N0") VNĐ
+                                            </h4>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <div class="col-md-6 text-center">
+                                <h5 class="border-bottom pb-2">QR Code thanh toán</h5>
+                                @if (!string.IsNullOrEmpty(Model.Payment.QRCodeData))
+                                {
+                                    <div class="qr-container p-3 bg-light rounded">
+                                        <img src="@Model.Payment.QRCodeData" 
+                                             alt="QR Payment" 
+                                             class="img-fluid" 
+                                             style="max-width: 300px;" />
+                                    </div>
+                                    <p class="text-muted mt-2">
+                                        <small>Quét mã QR bằng ứng dụng ngân hàng để thanh toán</small>
+                                    </p>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-warning">
+                                        Không thể tạo QR code. Vui lòng thanh toán trực tiếp.
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Instructions -->
+                        <div class="alert alert-info">
+                            <h5><i class="fas fa-info-circle"></i> Hướng dẫn thanh toán</h5>
+                            <ol class="mb-0">
+                                <li>Mở ứng dụng ngân hàng trên điện thoại</li>
+                                <li>Chọn chức năng "Quét QR" hoặc "QR Pay"</li>
+                                <li>Quét mã QR code ở trên</li>
+                                <li>Kiểm tra thông tin và xác nhận thanh toán</li>
+                                <li>Sau khi thanh toán thành công, nhấn nút "Xác nhận đã thanh toán" bên dưới</li>
+                            </ol>
+                        </div>
+                        
+                        <!-- Payment Status -->
+                        @if (Model.Payment.Status == "Completed")
+                        {
+                            <div class="alert alert-success">
+                                <h5><i class="fas fa-check-circle"></i> Thanh toán thành công!</h5>
+                                <p class="mb-0">Cảm ơn bạn đã thanh toán. Lịch hẹn của bạn đang được xử lý.</p>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <a asp-page="/Patient/MyAppointments" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-list"></i> Xem Lịch Hẹn Của Tôi
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <form method="post">
+                                <input type="hidden" asp-for="PaymentId" value="@Model.Payment.PaymentId" />
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Mã giao dịch (nếu có)</label>
+                                    <input asp-for="TransactionId" class="form-control" 
+                                           placeholder="Nhập mã giao dịch từ ngân hàng (tùy chọn)" />
+                                </div>
+                                
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-success btn-lg">
+                                        <i class="fas fa-check"></i> Xác Nhận Đã Thanh Toán
+                                    </button>
+                                    <a asp-page="/Patient/Dashboard" class="btn btn-outline-secondary">
+                                        <i class="fas fa-arrow-left"></i> Thanh toán sau
+                                    </a>
+                                </div>
+                            </form>
+                        }
+                        
+                        <div class="mt-4 text-center">
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt"></i> 
+                                Giao dịch được bảo mật và an toàn
+                            </small>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger">
+                            <h5><i class="fas fa-exclamation-triangle"></i> Không tìm thấy thông tin thanh toán</h5>
+                            <p>Vui lòng kiểm tra lại hoặc liên hệ hỗ trợ.</p>
+                            <a asp-page="/Patient/Dashboard" class="btn btn-primary">Quay về trang chủ</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
