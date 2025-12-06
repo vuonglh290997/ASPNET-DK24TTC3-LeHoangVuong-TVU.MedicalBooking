@@ -1,0 +1,485 @@
+﻿@page
+@model TVU.MedicalBooking.Pages.Patient.AppointmentDetailModel
+@{
+    ViewData["Title"] = "Chi tiết lịch hẹn";
+    Layout = "_Layout";
+}
+<div class="container mt-4 mb-5">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <a asp-page="/Patient/MyAppointments" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Quay lại danh sách
+            </a>
+        </div>
+    </div>
+
+    @if (Model.Appointment != null)
+    {
+        <div class="row">
+            <!-- Main Info Card -->
+            <div class="col-lg-8 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-calendar-check"></i>
+                                Chi Tiết Lịch Hẹn #@Model.Appointment.AppointmentId
+                            </h5>
+                            <span class="badge bg-@GetStatusBadgeColor(Model.Appointment.Status)">
+                                @GetStatusText(Model.Appointment.Status)
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Timeline Status -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2 mb-3">
+                                <i class="fas fa-tasks"></i> Trạng Thái
+                            </h6>
+                            <div class="timeline">
+                                <div class="timeline-item @(Model.Appointment.Status != "Cancelled" ? "completed" : "")">
+                                    <div class="timeline-marker">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <h6>Đã đặt lịch</h6>
+                                        <small class="text-muted">
+                                            @Model.Appointment.CreatedAt?.ToString("dd/MM/yyyy HH:mm")
+                                        </small>
+                                    </div>
+                                </div>
+
+                                @if (Model.Appointment.Payment != null)
+                                {
+                                    <div class="timeline-item @(Model.Appointment.Payment.Status == "Completed" ? "completed" : "")">
+                                        <div class="timeline-marker">
+                                            <i class="fas fa-money-bill"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <h6>Thanh toán</h6>
+                                            <small class="text-muted">
+                                                @if (Model.Appointment.Payment.Status == "Completed")
+                                                {
+                                                    <span class="text-success">
+                                                        ✓ Đã thanh toán - @Model.Appointment.Payment.PaidAt?.ToString("dd/MM/yyyy HH:mm")
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-warning">⏳ Chưa thanh toán</span>
+                                                }
+                                            </small>
+                                        </div>
+                                    </div>
+                                }
+
+                                <div class="timeline-item @(Model.Appointment.Status == "Approved" || Model.Appointment.Status == "Completed" ? "completed" : "")">
+                                    <div class="timeline-marker">
+                                        <i class="fas fa-user-check"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <h6>Bác sĩ duyệt</h6>
+                                        <small class="text-muted">
+                                            @if (Model.Appointment.Status == "Approved" || Model.Appointment.Status == "Completed")
+                                            {
+                                                <span class="text-success">
+                                                    ✓ Đã duyệt - @Model.Appointment.ApprovedAt?.ToString("dd/MM/yyyy HH:mm")
+                                                </span>
+                                            }
+                                            else if (Model.Appointment.Status == "Rejected")
+                                            {
+                                                <span class="text-danger">✗ Đã từ chối</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">⏳ Chờ duyệt</span>
+                                            }
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item @(Model.Appointment.Status == "Completed" ? "completed" : "")">
+                                    <div class="timeline-marker">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <h6>Khám bệnh</h6>
+                                        <small class="text-muted">
+                                            @if (Model.Appointment.Status == "Completed")
+                                            {
+                                                <span class="text-success">✓ Đã hoàn thành</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Chưa diễn ra</span>
+                                            }
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Appointment Info -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2 mb-3">
+                                <i class="fas fa-info-circle"></i> Thông Tin Lịch Hẹn
+                            </h6>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td width="40%"><strong>Dịch vụ:</strong></td>
+                                    <td>@Model.Appointment.Service.ServiceName</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Mô tả:</strong></td>
+                                    <td>@Model.Appointment.Service.Description</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Thời gian khám:</strong></td>
+                                    <td>@Model.Appointment.Service.DurationMinutes phút</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Giá dịch vụ:</strong></td>
+                                    <td><strong class="text-primary">@Model.Appointment.Service.Price.ToString("N0") VNĐ</strong></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Schedule Info -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2 mb-3">
+                                <i class="fas fa-clock"></i> Lịch Khám
+                            </h6>
+                            <div class="alert alert-info mb-0">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="mb-0">
+                                            <i class="fas fa-calendar-day"></i>
+                                            @Model.Appointment.AppointmentDate.ToString("dddd, dd/MM/yyyy", new System.Globalization.CultureInfo("vi-VN"))
+                                        </h5>
+                                    </div>
+                                    <div class="col-md-6 text-md-end">
+                                        <h5 class="mb-0">
+                                            <i class="fas fa-clock"></i>
+                                            @Model.Appointment.TimeSlot
+                                        </h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reason -->
+                        @if (!string.IsNullOrEmpty(Model.Appointment.Reason))
+                        {
+                            <div class="mb-4">
+                                <h6 class="border-bottom pb-2 mb-3">
+                                    <i class="fas fa-notes-medical"></i> Lý Do Khám
+                                </h6>
+                                <p class="mb-0">@Model.Appointment.Reason</p>
+                            </div>
+                        }
+
+                        <!-- Notes -->
+                        @if (!string.IsNullOrEmpty(Model.Appointment.Notes))
+                        {
+                            <div class="mb-4">
+                                <div class="alert alert-warning">
+                                    <h6><i class="fas fa-exclamation-triangle"></i> Ghi Chú Từ Bác Sĩ</h6>
+                                    <p class="mb-0">@Model.Appointment.Notes</p>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Actions -->
+                        <div class="d-grid gap-2">
+                            @if (Model.Appointment.Status == "Pending" &&
+                                                    (Model.Appointment.Payment == null || Model.Appointment.Payment.Status != "Completed"))
+                            {
+                                <a asp-page="/Patient/Payment" asp-route-id="@Model.Appointment.Payment?.PaymentId"
+                                   class="btn btn-success btn-lg">
+                                    <i class="fas fa-qrcode"></i> Thanh Toán Ngay
+                                </a>
+                            }
+
+                            @if (Model.Appointment.Status == "Pending" || Model.Appointment.Status == "Approved")
+                            {
+                                <button type="button" class="btn btn-danger"
+                                        data-bs-toggle="modal" data-bs-target="#cancelModal">
+                                    <i class="fas fa-times-circle"></i> Hủy Lịch Hẹn
+                                </button>
+                            }
+
+                            @if (Model.Appointment.Status == "Approved")
+                            {
+                                <a href="#" class="btn btn-outline-primary" onclick="window.print(); return false;">
+                                    <i class="fas fa-print"></i> In Phiếu Hẹn
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Doctor Info Card -->
+                <div class="card shadow mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h6 class="mb-0">
+                            <i class="fas fa-user-md"></i> Thông Tin Bác Sĩ
+                        </h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <div class="avatar-circle mx-auto mb-3">
+                                <i class="fas fa-user-md fa-3x text-info"></i>
+                            </div>
+                            <h5 class="mb-1">BS. @Model.Appointment.Doctor.User.FullName</h5>
+                            @if (!string.IsNullOrEmpty(Model.Appointment.Doctor.Specialization))
+                            {
+                                <p class="text-muted mb-2">
+                                    <i class="fas fa-stethoscope"></i>
+                                    @Model.Appointment.Doctor.Specialization
+                                </p>
+                            }
+                            @if (Model.Appointment.Doctor.YearsOfExperience > 0)
+                            {
+                                <p class="text-muted mb-2">
+                                    <i class="fas fa-award"></i>
+                                    @Model.Appointment.Doctor.YearsOfExperience năm kinh nghiệm
+                                </p>
+                            }
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.Appointment.Doctor.Biography))
+                        {
+                            <div class="text-start">
+                                <h6 class="border-bottom pb-2">Giới thiệu</h6>
+                                <p class="small">@Model.Appointment.Doctor.Biography</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Payment Info Card -->
+                @if (Model.Appointment.Payment != null)
+                {
+                    <div class="card shadow mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h6 class="mb-0">
+                                <i class="fas fa-money-bill-wave"></i> Thông Tin Thanh Toán
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm table-borderless mb-0">
+                                <tr>
+                                    <td><strong>Mã thanh toán:</strong></td>
+                                    <td>#@Model.Appointment.Payment.PaymentId</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Số tiền:</strong></td>
+                                    <td><strong class="text-success">@Model.Appointment.Payment.Amount?.ToString("N0") ₫</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Phương thức:</strong></td>
+                                    <td>@Model.Appointment.Payment.PaymentMethod</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Trạng thái:</strong></td>
+                                    <td>
+                                        @if (Model.Appointment.Payment.Status == "Completed")
+                                        {
+                                            <span class="badge bg-success">Đã thanh toán</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">Chưa thanh toán</span>
+                                        }
+                                    </td>
+                                </tr>
+                                @if (Model.Appointment.Payment.PaidAt.HasValue)
+                                {
+                                    <tr>
+                                        <td><strong>Thời gian:</strong></td>
+                                        <td>
+                                            <small>@Model.Appointment.Payment.PaidAt.Value.ToString("dd/MM/yyyy HH:mm")</small>
+                                        </td>
+                                    </tr>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.Appointment.Payment.TransactionId))
+                                {
+                                    <tr>
+                                        <td><strong>Mã GD:</strong></td>
+                                        <td><small>@Model.Appointment.Payment.TransactionId</small></td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                }
+
+                <!-- Contact Info -->
+                <div class="card shadow">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="mb-0">
+                            <i class="fas fa-phone"></i> Liên Hệ Hỗ Trợ
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2">
+                            <i class="fas fa-phone-alt text-primary"></i>
+                            <strong>Hotline:</strong> 1900 xxxx
+                        </p>
+                        <p class="mb-2">
+                            <i class="fas fa-envelope text-primary"></i>
+                            <strong>Email:</strong> support@phongkham.vn
+                        </p>
+                        <p class="mb-0 small text-muted">
+                            <i class="fas fa-clock"></i>
+                            Thứ 2 - Thứ 6: 8:00 - 18:00<br />
+                            Thứ 7: 8:00 - 12:00
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger">
+            <h5><i class="fas fa-exclamation-triangle"></i> Không Tìm Thấy Lịch Hẹn</h5>
+            <p>Lịch hẹn này không tồn tại hoặc bạn không có quyền truy cập.</p>
+            <a asp-page="/Patient/MyAppointments" class="btn btn-primary">
+                Quay về danh sách lịch hẹn
+            </a>
+        </div>
+    }
+</div>
+
+<!-- Cancel Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Hủy Lịch Hẹn</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" asp-page-handler="Cancel">
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Bạn có chắc muốn hủy lịch hẹn này?
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Lý do hủy *</label>
+                        <textarea name="reason" class="form-control" rows="4" required
+                                  placeholder="Vui lòng cho chúng tôi biết lý do bạn muốn hủy..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-check"></i> Xác Nhận Hủy
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetStatusBadgeColor(string status)
+    {
+        return status switch
+        {
+            "Pending" => "warning",
+            "Approved" => "success",
+            "Completed" => "info",
+            "Cancelled" => "danger",
+            "Rejected" => "dark",
+            _ => "secondary"
+        };
+    }
+
+    string GetStatusText(string status)
+    {
+        return status switch
+        {
+            "Pending" => "Chờ duyệt",
+            "Approved" => "Đã duyệt",
+            "Completed" => "Hoàn thành",
+            "Cancelled" => "Đã hủy",
+            "Rejected" => "Bị từ chối",
+            _ => status
+        };
+    }
+}
+
+@section Styles {
+    <style>
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 30px;
+        }
+
+            .timeline-item::before {
+                content: '';
+                position: absolute;
+                left: -28px;
+                top: 30px;
+                width: 2px;
+                height: calc(100% - 30px);
+                background: #dee2e6;
+            }
+
+            .timeline-item:last-child::before {
+                display: none;
+            }
+
+        .timeline-marker {
+            position: absolute;
+            left: -40px;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 1;
+        }
+
+        .timeline-item.completed .timeline-marker {
+            background: #28a745;
+        }
+
+        .timeline-item.completed::before {
+            background: #28a745;
+        }
+
+        .avatar-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #17a2b8;
+        }
+
+        @@media print {
+            .btn, .modal, nav, footer
+
+        {
+            display: none !important;
+        }
+
+        }
+    </style>
+}
