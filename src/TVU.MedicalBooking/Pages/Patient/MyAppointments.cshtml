@@ -1,0 +1,253 @@
+﻿@page
+@model TVU.MedicalBooking.Pages.Patient.MyAppointmentsModel
+@{
+    ViewData["Title"] = "Lịch hẹn của tôi";
+}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2><i class="fas fa-calendar-check"></i> Lịch Hẹn Của Tôi</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-page="/Patient/BookAppointment" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Đặt Lịch Mới
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <ul class="nav nav-pills mb-4" id="filterTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(Model.FilterStatus == "All" || string.IsNullOrEmpty(Model.FilterStatus) ? "active" : "")"
+                    onclick="window.location.href='?status=All'">
+                <i class="fas fa-list"></i> Tất cả (@Model.AllCount)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(Model.FilterStatus == "Pending" ? "active" : "")"
+                    onclick="window.location.href='?status=Pending'">
+                <i class="fas fa-clock"></i> Chờ duyệt (@Model.PendingCount)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(Model.FilterStatus == "Approved" ? "active" : "")"
+                    onclick="window.location.href='?status=Approved'">
+                <i class="fas fa-check-circle"></i> Đã duyệt (@Model.ApprovedCount)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(Model.FilterStatus == "Completed" ? "active" : "")"
+                    onclick="window.location.href='?status=Completed'">
+                <i class="fas fa-check-double"></i> Hoàn thành (@Model.CompletedCount)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @(Model.FilterStatus == "Cancelled" ? "active" : "")"
+                    onclick="window.location.href='?status=Cancelled'">
+                <i class="fas fa-times-circle"></i> Đã hủy (@Model.CancelledCount)
+            </button>
+        </li>
+    </ul>
+
+    <!-- Appointments List -->
+    @if (Model.Appointments.Any())
+    {
+        <div class="row">
+            @foreach (var apt in Model.Appointments)
+            {
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow h-100 border-@GetStatusColor(apt.Status)">
+                        <div class="card-header bg-@GetStatusColor(apt.Status) text-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>
+                                    <i class="fas fa-calendar"></i>
+                                    <strong>@apt.AppointmentDate.ToString("dd/MM/yyyy")</strong> - @apt.TimeSlot
+                                </span>
+                                <span class="badge bg-light text-dark">
+                                    #@apt.AppointmentId
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <h5 class="card-title mb-2">
+                                    <i class="fas fa-stethoscope"></i> @apt.Service.ServiceName
+                                </h5>
+                                <p class="text-muted mb-1">
+                                    <i class="fas fa-user-md"></i> BS. @apt.Doctor.User.FullName
+                                </p>
+                                @if (!string.IsNullOrEmpty(apt.Doctor.Specialization))
+                                {
+                                    <p class="text-muted mb-0">
+                                        <small>Chuyên khoa: @apt.Doctor.Specialization</small>
+                                    </p>
+                                }
+                            </div>
+
+                            <div class="mb-3">
+                                <strong>Trạng thái:</strong>
+                                <span class="badge bg-@GetStatusColor(apt.Status) ms-2">
+                                    @GetStatusText(apt.Status)
+                                </span>
+                            </div>
+
+                            <div class="mb-3">
+                                <strong>Thanh toán:</strong>
+                                @if (apt.Payment != null)
+                                {
+                                    if (apt.Payment.Status == "Completed")
+                                    {
+                                        <span class="badge bg-success ms-2">
+                                            <i class="fas fa-check"></i> Đã thanh toán
+                                        </span>
+                                        <br />
+                                        <small class="text-muted">
+                                            Số tiền: @apt.Payment.Amount?.ToString("N0") VNĐ
+                                        </small>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning ms-2">
+                                            <i class="fas fa-clock"></i> Chưa thanh toán
+                                        </span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary ms-2">Chưa có</span>
+                                }
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(apt.Reason))
+                            {
+                                <div class="mb-3">
+                                    <strong>Lý do khám:</strong>
+                                    <p class="mb-0">@apt.Reason</p>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(apt.Notes))
+                            {
+                                <div class="alert alert-info mb-3">
+                                    <strong><i class="fas fa-info-circle"></i> Ghi chú:</strong>
+                                    <p class="mb-0">@apt.Notes</p>
+                                </div>
+                            }
+
+                            <div class="d-grid gap-2">
+                                @if (apt.Status == "Pending" && (apt.Payment == null || apt.Payment.Status != "Completed"))
+                                {
+                                    <a asp-page="/Patient/Payment" asp-route-id="@apt.Payment?.PaymentId"
+                                       class="btn btn-success">
+                                        <i class="fas fa-qrcode"></i> Thanh Toán Ngay
+                                    </a>
+                                }
+
+                                @if (apt.Status == "Pending" || apt.Status == "Approved")
+                                {
+                                    <button type="button" class="btn btn-danger"
+                                            onclick="cancelAppointment(@apt.AppointmentId)">
+                                        <i class="fas fa-times"></i> Hủy Lịch Hẹn
+                                    </button>
+                                }
+
+                                <a asp-page="/Patient/AppointmentDetail" asp-route-id="@apt.AppointmentId"
+                                   class="btn btn-outline-primary">
+                                    <i class="fas fa-eye"></i> Xem Chi Tiết
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <small>
+                                <i class="fas fa-clock"></i> Đặt lúc: @apt.CreatedAt?.ToString("dd/MM/yyyy HH:mm")
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="card shadow">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+                <h4>Không có lịch hẹn nào</h4>
+                <p class="text-muted">Bạn chưa có lịch hẹn nào trong trạng thái này</p>
+                <a asp-page="/Patient/BookAppointment" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Đặt Lịch Ngay
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Cancel Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Hủy Lịch Hẹn</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" asp-page-handler="Cancel">
+                <div class="modal-body">
+                    <input type="hidden" id="cancelAppointmentId" name="appointmentId" />
+                    <div class="mb-3">
+                        <label class="form-label">Lý do hủy *</label>
+                        <textarea name="reason" class="form-control" rows="4" required
+                                  placeholder="Vui lòng cho chúng tôi biết lý do bạn muốn hủy lịch hẹn..."></textarea>
+                    </div>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Lưu ý:</strong> Việc hủy lịch hẹn có thể ảnh hưởng đến kế hoạch khám bệnh.
+                        Vui lòng cân nhắc kỹ trước khi hủy.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-check"></i> Xác Nhận Hủy
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetStatusColor(string status)
+    {
+        return status switch
+        {
+            "Pending" => "warning",
+            "Approved" => "success",
+            "Completed" => "info",
+            "Cancelled" => "danger",
+            "Rejected" => "dark",
+            _ => "secondary"
+        };
+    }
+
+    string GetStatusText(string status)
+    {
+        return status switch
+        {
+            "Pending" => "Chờ duyệt",
+            "Approved" => "Đã duyệt",
+            "Completed" => "Hoàn thành",
+            "Cancelled" => "Đã hủy",
+            "Rejected" => "Bị từ chối",
+            _ => status
+        };
+    }
+}
+
+@section Scripts {
+    <script>
+        function cancelAppointment(id) {
+            $('#cancelAppointmentId').val(id);
+            $('#cancelModal').modal('show');
+        }
+    </script>
+}
