@@ -1,13 +1,23 @@
 ASPNET-DK24TTC3-LeHoangVuong-TVU.MedicalBooking
+
 Đồ án môn học Chuyên đề ASP.NET – Xây dựng Website đặt lịch hẹn khám bệnh ngoài giờ
+
 Thông tin tác giả
+
 Họ và tên: Lê Hoàng Vương
+
 Lớp: DK24TTC3
+
 MSSV: 170124304
+
 Email: vuonglh290997@tvu-onschool.edu.vn
+
 Điện thoại: 0973396920
+
 Trường Đại học Trà Vinh
+
 GVHD: TS. Đoàn Phước Miền
+
 
 Website đặt lịch hẹn khám bệnh ngoài giờ  – 2025
 
