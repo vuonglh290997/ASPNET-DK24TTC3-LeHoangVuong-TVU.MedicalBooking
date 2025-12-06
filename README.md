@@ -1,7 +1,16 @@
-Hệ thống Đặt lịch & Quản lý Khám bệnh – 2025
+ASPNET-DK24TTC3-LeHoangVuong-TVU.MedicalBooking
+Đồ án môn học Chuyên đề ASP.NET – Xây dựng Website đặt lịch hẹn khám bệnh ngoài giờ
+Thông tin tác giả
+Họ và tên: Lê Hoàng Vương
+Lớp: DK24TTC3
+MSSV: 170124304
+Email: vuonglh290997@tvu-onschool.edu.vn
+Điện thoại: 0973396920
+Trường Đại học Trà Vinh
+GVHD: TS. Đoàn Phước Miền
 
-Thời gian phát triển: 20/11/2025 – nay
-Công nghệ: ASP.NET Core Razor Pages · Entity Framework Core · SQL Server 2022 · UML · PlantUML · Bootstrap/Tailwind (tuỳ chọn)
+Website đặt lịch hẹn khám bệnh ngoài giờ  – 2025
+
 
 📌 1. Giới thiệu
 
@@ -131,7 +140,7 @@ SQL Server 2022
 Visual Studio 2022 hoặc VS Code
 
 8.2 Bước cài đặt
-git clone https://github.com/.../booking-system.git
+git clone https://github.com/vuonglh290997/ASPNET-DK24TTC3-LeHoangVuong-TVU.MedicalBooking.git
 cd booking-system
 dotnet restore
 dotnet ef database update
