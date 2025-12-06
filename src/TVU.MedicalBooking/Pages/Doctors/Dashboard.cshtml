@@ -1,0 +1,329 @@
+﻿@page
+@model TVU.MedicalBooking.Pages.Doctors.DashboardModel
+@{
+    ViewData["Title"] = "Bác sĩ - Trang chủ";
+}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">
+                <i class="fas fa-user-md"></i> BS. @Model.CurrentUser.FullName
+            </h2>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Chờ duyệt</h6>
+                            <h2 class="mb-0">@Model.PendingAppointments</h2>
+                        </div>
+                        <i class="fas fa-clock fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Hôm nay</h6>
+                            <h2 class="mb-0">@Model.TodayAppointments</h2>
+                        </div>
+                        <i class="fas fa-calendar-day fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Tuần này</h6>
+                            <h2 class="mb-0">@Model.ThisWeekAppointments</h2>
+                        </div>
+                        <i class="fas fa-calendar-week fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2">Hoàn thành</h6>
+                            <h2 class="mb-0">@Model.CompletedAppointments</h2>
+                        </div>
+                        <i class="fas fa-check-circle fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-3" id="appointmentTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pending-tab" data-bs-toggle="tab"
+                    data-bs-target="#pending" type="button">
+                <i class="fas fa-clock"></i> Chờ Duyệt (@Model.PendingList.Count)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="today-tab" data-bs-toggle="tab"
+                    data-bs-target="#today" type="button">
+                <i class="fas fa-calendar-day"></i> Hôm Nay (@Model.TodayList.Count)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="upcoming-tab" data-bs-toggle="tab"
+                    data-bs-target="#upcoming" type="button">
+                <i class="fas fa-calendar-alt"></i> Sắp Tới (@Model.UpcomingList.Count)
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="appointmentTabsContent">
+        <!-- Pending Appointments -->
+        <div class="tab-pane fade show active" id="pending" role="tabpanel">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0"><i class="fas fa-hourglass-half"></i> Danh Sách Chờ Duyệt</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.PendingList.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Mã</th>
+                                        <th>Bệnh nhân</th>
+                                        <th>Dịch vụ</th>
+                                        <th>Ngày giờ</th>
+                                        <th>Liên hệ</th>
+                                        <th>Thanh toán</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var apt in Model.PendingList)
+                                    {
+                                        <tr>
+                                            <td><strong>#@apt.AppointmentId</strong></td>
+                                            <td>
+                                                <strong>@apt.Patient.User.FullName</strong><br />
+                                                <small class="text-muted">@apt.Patient.Gender - @apt.Patient.DateOfBirth?.ToString("dd/MM/yyyy")</small>
+                                            </td>
+                                            <td>@apt.Service.ServiceName</td>
+                                            <td>
+                                                <strong>@apt.AppointmentDate.ToString("dd/MM/yyyy")</strong><br />
+                                                <small>@apt.TimeSlot</small>
+                                            </td>
+                                            <td>
+                                                <i class="fas fa-phone"></i> @apt.Patient.User.PhoneNumber<br />
+                                                <i class="fas fa-envelope"></i> @apt.Patient.User.Email
+                                            </td>
+                                            <td>
+                                                @if (apt.Payment?.Status == "Completed")
+                                                {
+                                                    <span class="badge bg-success">Đã thanh toán</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-warning">Chưa thanh toán</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a asp-page="/Doctors/AppointmentDetail"
+                                                       asp-route-id="@apt.AppointmentId"
+                                                       class="btn btn-sm btn-info">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-success"
+                                                            onclick="approveAppointment(@apt.AppointmentId)">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                            onclick="showRejectModal(@apt.AppointmentId)">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                            <p class="text-muted">Không có lịch hẹn chờ duyệt</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Today's Appointments -->
+        <div class="tab-pane fade" id="today" role="tabpanel">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-calendar-day"></i> Lịch Hẹn Hôm Nay</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.TodayList.Any())
+                    {
+                        <div class="row">
+                            @foreach (var apt in Model.TodayList.OrderBy(a => a.TimeSlot))
+                            {
+                                <div class="col-md-6 mb-3">
+                                    <div class="card border-info">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between">
+                                                <h5 class="card-title">@apt.TimeSlot</h5>
+                                                <span class="badge bg-@(apt.Status == "Approved" ? "success" : "warning")">
+                                                    @apt.Status
+                                                </span>
+                                            </div>
+                                            <h6 class="card-subtitle mb-2 text-muted">#@apt.AppointmentId</h6>
+                                            <p class="mb-1"><strong>@apt.Patient.User.FullName</strong></p>
+                                            <p class="mb-1">@apt.Service.ServiceName</p>
+                                            <p class="mb-2"><i class="fas fa-phone"></i> @apt.Patient.User.PhoneNumber</p>
+                                            <a asp-page="/Doctors/AppointmentDetail"
+                                               asp-route-id="@apt.AppointmentId"
+                                               class="btn btn-sm btn-outline-info">
+                                                <i class="fas fa-eye"></i> Chi tiết
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Không có lịch hẹn hôm nay</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Appointments -->
+        <div class="tab-pane fade" id="upcoming" role="tabpanel">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-calendar-alt"></i> Lịch Hẹn Sắp Tới</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.UpcomingList.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Ngày</th>
+                                        <th>Giờ</th>
+                                        <th>Bệnh nhân</th>
+                                        <th>Dịch vụ</th>
+                                        <th>Trạng thái</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var apt in Model.UpcomingList)
+                                    {
+                                        <tr>
+                                            <td><strong>@apt.AppointmentDate.ToString("dd/MM/yyyy")</strong></td>
+                                            <td>@apt.TimeSlot</td>
+                                            <td>@apt.Patient.User.FullName</td>
+                                            <td>@apt.Service.ServiceName</td>
+                                            <td>
+                                                <span class="badge bg-@(apt.Status == "Approved" ? "success" : "warning")">
+                                                    @apt.Status
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a asp-page="/Doctors/AppointmentDetail"
+                                                   asp-route-id="@apt.AppointmentId"
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-eye"></i> Chi tiết
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-calendar-check fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Không có lịch hẹn sắp tới</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Modal -->
+<div class="modal fade" id="rejectModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Từ Chối Lịch Hẹn</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" asp-page-handler="Reject">
+                <div class="modal-body">
+                    <input type="hidden" id="rejectAppointmentId" name="appointmentId" />
+                    <div class="mb-3">
+                        <label class="form-label">Lý do từ chối *</label>
+                        <textarea name="reason" class="form-control" rows="4" required
+                                  placeholder="Nhập lý do từ chối lịch hẹn..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-danger">Xác Nhận Từ Chối</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function approveAppointment(id) {
+            if (confirm('Bạn có chắc muốn duyệt lịch hẹn này?')) {
+                $.post('/Doctor/Dashboard?handler=Approve', { appointmentId: id }, function() {
+                    location.reload();
+                });
+            }
+        }
+
+        function showRejectModal(id) {
+            $('#rejectAppointmentId').val(id);
+            $('#rejectModal').modal('show');
+        }
+    </script>
+}
