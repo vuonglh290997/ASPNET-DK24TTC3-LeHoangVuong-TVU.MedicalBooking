@@ -1,0 +1,107 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = TVU.MedicalBooking
+build_property.RootNamespace = TVU.MedicalBooking
+build_property.ProjectDir = D:\Source\TVU.MedicalBooking\TVU.MedicalBooking\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\Source\TVU.MedicalBooking\TVU.MedicalBooking
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Account/Logout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWNjb3VudFxMb2dvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Admin/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Admin/Reports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cUmVwb3J0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Admin/Users.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVXNlcnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Doctors/AppointmentDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRG9jdG9yc1xBcHBvaW50bWVudERldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Doctors/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRG9jdG9yc1xEYXNoYm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Patient/AppointmentDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGF0aWVudFxBcHBvaW50bWVudERldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Patient/BookAppointment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGF0aWVudFxCb29rQXBwb2ludG1lbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Patient/CompleteProfile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGF0aWVudFxDb21wbGV0ZVByb2ZpbGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Patient/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGF0aWVudFxEYXNoYm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Patient/MyAppointments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGF0aWVudFxNeUFwcG9pbnRtZW50cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Patient/Payment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGF0aWVudFxQYXltZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpdmFjeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Source/TVU.MedicalBooking/TVU.MedicalBooking/Pages/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-4swxiooeyr

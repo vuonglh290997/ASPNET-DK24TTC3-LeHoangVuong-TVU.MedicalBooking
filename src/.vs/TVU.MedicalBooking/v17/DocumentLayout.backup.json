@@ -1,0 +1,105 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Source\\TVU.MedicalBooking\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{18DBF6BB-718F-42CE-96E8-BFBAF5D1E6C0}|TVU.MedicalBooking\\TVU.MedicalBooking.csproj|d:\\source\\tvu.medicalbooking\\tvu.medicalbooking\\pages\\doctors\\dashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{18DBF6BB-718F-42CE-96E8-BFBAF5D1E6C0}|TVU.MedicalBooking\\TVU.MedicalBooking.csproj|solutionrelative:tvu.medicalbooking\\pages\\doctors\\dashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18DBF6BB-718F-42CE-96E8-BFBAF5D1E6C0}|TVU.MedicalBooking\\TVU.MedicalBooking.csproj|d:\\source\\tvu.medicalbooking\\tvu.medicalbooking\\pages\\doctors\\appointmentdetail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{18DBF6BB-718F-42CE-96E8-BFBAF5D1E6C0}|TVU.MedicalBooking\\TVU.MedicalBooking.csproj|solutionrelative:tvu.medicalbooking\\pages\\doctors\\appointmentdetail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18DBF6BB-718F-42CE-96E8-BFBAF5D1E6C0}|TVU.MedicalBooking\\TVU.MedicalBooking.csproj|d:\\source\\tvu.medicalbooking\\tvu.medicalbooking\\pages\\doctors\\appointmentdetail.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{18DBF6BB-718F-42CE-96E8-BFBAF5D1E6C0}|TVU.MedicalBooking\\TVU.MedicalBooking.csproj|solutionrelative:tvu.medicalbooking\\pages\\doctors\\appointmentdetail.cshtml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18DBF6BB-718F-42CE-96E8-BFBAF5D1E6C0}|TVU.MedicalBooking\\TVU.MedicalBooking.csproj|d:\\source\\tvu.medicalbooking\\tvu.medicalbooking\\pages\\patient\\appointmentdetail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{18DBF6BB-718F-42CE-96E8-BFBAF5D1E6C0}|TVU.MedicalBooking\\TVU.MedicalBooking.csproj|solutionrelative:tvu.medicalbooking\\pages\\patient\\appointmentdetail.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18DBF6BB-718F-42CE-96E8-BFBAF5D1E6C0}|TVU.MedicalBooking\\TVU.MedicalBooking.csproj|d:\\source\\tvu.medicalbooking\\tvu.medicalbooking\\pages\\patient\\payment.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{18DBF6BB-718F-42CE-96E8-BFBAF5D1E6C0}|TVU.MedicalBooking\\TVU.MedicalBooking.csproj|solutionrelative:tvu.medicalbooking\\pages\\patient\\payment.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AppointmentDetail.cshtml.cs",
+              "DocumentMoniker": "D:\\Source\\TVU.MedicalBooking\\TVU.MedicalBooking\\Pages\\Doctors\\AppointmentDetail.cshtml.cs",
+              "RelativeDocumentMoniker": "TVU.MedicalBooking\\Pages\\Doctors\\AppointmentDetail.cshtml.cs",
+              "ToolTip": "D:\\Source\\TVU.MedicalBooking\\TVU.MedicalBooking\\Pages\\Doctors\\AppointmentDetail.cshtml.cs",
+              "RelativeToolTip": "TVU.MedicalBooking\\Pages\\Doctors\\AppointmentDetail.cshtml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-06T12:41:07.287Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AppointmentDetail.cshtml",
+              "DocumentMoniker": "D:\\Source\\TVU.MedicalBooking\\TVU.MedicalBooking\\Pages\\Doctors\\AppointmentDetail.cshtml",
+              "RelativeDocumentMoniker": "TVU.MedicalBooking\\Pages\\Doctors\\AppointmentDetail.cshtml",
+              "ToolTip": "D:\\Source\\TVU.MedicalBooking\\TVU.MedicalBooking\\Pages\\Doctors\\AppointmentDetail.cshtml",
+              "RelativeToolTip": "TVU.MedicalBooking\\Pages\\Doctors\\AppointmentDetail.cshtml",
+              "ViewState": "AgIAACABAAAAAAAAAAAAABkAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-06T12:40:47.702Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Dashboard.cshtml",
+              "DocumentMoniker": "D:\\Source\\TVU.MedicalBooking\\TVU.MedicalBooking\\Pages\\Doctors\\Dashboard.cshtml",
+              "RelativeDocumentMoniker": "TVU.MedicalBooking\\Pages\\Doctors\\Dashboard.cshtml",
+              "ToolTip": "D:\\Source\\TVU.MedicalBooking\\TVU.MedicalBooking\\Pages\\Doctors\\Dashboard.cshtml",
+              "RelativeToolTip": "TVU.MedicalBooking\\Pages\\Doctors\\Dashboard.cshtml",
+              "ViewState": "AgIAAPkAAAAAAAAAAAAgwAYBAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-06T12:40:02.958Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AppointmentDetail.cshtml",
+              "DocumentMoniker": "D:\\Source\\TVU.MedicalBooking\\TVU.MedicalBooking\\Pages\\Patient\\AppointmentDetail.cshtml",
+              "RelativeDocumentMoniker": "TVU.MedicalBooking\\Pages\\Patient\\AppointmentDetail.cshtml",
+              "ToolTip": "D:\\Source\\TVU.MedicalBooking\\TVU.MedicalBooking\\Pages\\Patient\\AppointmentDetail.cshtml",
+              "RelativeToolTip": "TVU.MedicalBooking\\Pages\\Patient\\AppointmentDetail.cshtml",
+              "ViewState": "AgIAAAgBAAAAAAAAAAAAABYBAABnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-06T12:22:23.812Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Payment.cshtml",
+              "DocumentMoniker": "D:\\Source\\TVU.MedicalBooking\\TVU.MedicalBooking\\Pages\\Patient\\Payment.cshtml",
+              "RelativeDocumentMoniker": "TVU.MedicalBooking\\Pages\\Patient\\Payment.cshtml",
+              "ToolTip": "D:\\Source\\TVU.MedicalBooking\\TVU.MedicalBooking\\Pages\\Patient\\Payment.cshtml",
+              "RelativeToolTip": "TVU.MedicalBooking\\Pages\\Patient\\Payment.cshtml",
+              "ViewState": "AgIAACkAAAAAAAAAAAAQwDUAAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-06T12:21:29.548Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

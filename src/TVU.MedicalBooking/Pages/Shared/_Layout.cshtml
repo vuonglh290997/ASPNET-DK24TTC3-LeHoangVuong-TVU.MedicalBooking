@@ -1,0 +1,266 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]TVU - Hệ Thống Đặt Lịch Khám Bệnh</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding-bottom: 40px;
+        }
+        
+        footer {
+            background-color: #f8f9fa;
+            margin-top: auto;
+        }
+        
+        .card {
+            border-radius: 10px;
+        }
+        
+        .btn {
+            border-radius: 5px;
+        }
+        
+        .opacity-50 {
+            opacity: 0.5;
+        }
+    </style>
+    
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-hospital"></i> Phòng Khám Đa khoa TUV - eClinic
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @if (User.IsInRole("Patient"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Patient/Dashboard">
+                                    <i class="fas fa-home"></i> Trang chủ
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Patient/BookAppointment">
+                                    <i class="fas fa-calendar-plus"></i> Đặt lịch
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Patient/MyAppointments">
+                                    <i class="fas fa-list"></i> Lịch của tôi
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Doctor"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Doctor/Dashboard">
+                                    <i class="fas fa-home"></i> Trang chủ
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Doctor/Appointments">
+                                    <i class="fas fa-calendar-check"></i> Lịch hẹn
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Admin/Dashboard">
+                                    <i class="fas fa-chart-bar"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Admin/Users">
+                                    <i class="fas fa-users"></i> Quản lý User
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Admin/Reports">
+                                    <i class="fas fa-file-alt"></i> Báo cáo
+                                </a>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-page="/Index">
+                                <i class="fas fa-home"></i> Trang chủ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-page="/Services">
+                                <i class="fas fa-stethoscope"></i> Dịch vụ
+                            </a>
+                        </li>
+                    }
+                </ul>
+                
+                <ul class="navbar-nav ms-auto">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" 
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle"></i> @User.Identity.Name
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-page="/Account/Profile">
+                                        <i class="fas fa-user-edit"></i> Hồ sơ
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-page="/Account/ChangePassword">
+                                        <i class="fas fa-key"></i> Đổi mật khẩu
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="post" asp-page="/Account/Logout" class="d-inline">
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-page="/Account/Login">
+                                <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-page="/Account/Register">
+                                <i class="fas fa-user-plus"></i> Đăng ký
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Alert Messages -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        }
+        
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        }
+        
+        @RenderBody()
+    </main>
+    
+    <!-- Footer -->
+    <footer class="py-4 border-top">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-3">
+                    <h5><i class="fas fa-hospital"></i> Phòng Khám Đa khoa TUV - eClinic</h5>
+                    <p class="text-muted">Hệ thống đặt lịch khám bệnh trực tuyến</p>
+                </div>
+
+                <div class="col-md-3">
+                    <h6>Liên hệ</h6>
+                    <p class="text-muted mb-1">
+                        <i class="fas fa-map-marker-alt"></i> 126 Nguyễn Thiện Thành, Phường Hòa Thuận, tỉnh Vĩnh Long
+                    </p>
+                    <p class="text-muted mb-1">
+                        <i class="fas fa-phone"></i> 1900 xxxx
+                    </p>
+                    <p class="text-muted">
+                        <i class="fas fa-envelope"></i> info.eClinic@tvu.edu.vn
+                    </p>
+                </div>
+
+                <div class="col-md-3">
+                    <h6>Lịch khám giờ hành chính</h6>
+                    <p class="text-muted mb-1">Thứ 2 - Thứ 6: 8:00 - 16:00</p>
+                    <p class="text-muted mb-1">Thứ 7: Không làm việc</p>
+                    <p class="text-muted">Chủ nhật: Không làm việc</p>
+                </div>
+
+                <div class="col-md-3">
+                    <h6>Lịch khám ngoài giờ</h6>
+                    <p class="text-muted mb-1">Thứ 2 - Thứ 6: 17:00 - 20:30</p>
+                    <p class="text-muted mb-1">Thứ 7: 08:00 - 20:30</p>
+                    <p class="text-muted">Chủ nhật: 08:00 - 20:30</p>
+                </div>
+
+            </div>
+
+            <hr />
+
+            <div class="text-center text-muted">
+                <small>&copy; @DateTime.Now.Year Phòng Khám Đa khoa TVU - eClinic. All rights reserved.</small>
+            </div>
+        </div>
+    </footer>
+
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
