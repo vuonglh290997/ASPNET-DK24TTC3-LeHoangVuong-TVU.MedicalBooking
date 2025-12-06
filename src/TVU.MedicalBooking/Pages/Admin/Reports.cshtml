@@ -1,0 +1,324 @@
+﻿@page
+@model TVU.MedicalBooking.Pages.Admin.ReportsModel
+@{
+    ViewData["Title"] = "Báo cáo & Thống kê";
+}
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="fas fa-chart-pie"></i> Báo Cáo & Thống Kê</h2>
+        </div>
+    </div>
+
+    <!-- Date Range Filter -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Từ ngày</label>
+                    <input type="date" name="startDate" class="form-control"
+                           value="@Model.StartDate.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Đến ngày</label>
+                    <input type="date" name="endDate" class="form-control"
+                           value="@Model.EndDate.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter"></i> Lọc
+                    </button>
+                </div>
+                <div class="col-md-4 text-end">
+                    <label class="form-label">&nbsp;</label>
+                    <div>
+                        <button type="button" class="btn btn-success" onclick="exportToExcel()">
+                            <i class="fas fa-file-excel"></i> Xuất Excel
+                        </button>
+                        <button type="button" class="btn btn-danger" onclick="exportToPDF()">
+                            <i class="fas fa-file-pdf"></i> Xuất PDF
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card text-white bg-primary shadow">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-white-50">Tổng lịch hẹn</h6>
+                    <h2 class="mb-0">@Model.TotalAppointments</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card text-white bg-success shadow">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-white-50">Hoàn thành</h6>
+                    <h2 class="mb-0">@Model.CompletedAppointments</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card text-white bg-info shadow">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-white-50">Tổng doanh thu</h6>
+                    <h2 class="mb-0">@Model.TotalRevenue.ToString("N0")</h2>
+                    <small>VNĐ</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card text-white bg-warning shadow">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-white-50">Trung bình/lịch</h6>
+                    <h2 class="mb-0">@Model.AveragePayment.ToString("N0")</h2>
+                    <small>VNĐ</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="row mb-4">
+        <div class="col-lg-8 mb-3">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-line"></i> Doanh Thu Theo Thời Gian</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="revenueChart" height="80"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-3">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie"></i> Lịch Hẹn Theo Trạng Thái</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Services & Doctors -->
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-3">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-trophy"></i> Top 10 Dịch Vụ</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Dịch vụ</th>
+                                    <th>Giá</th>
+                                    <th class="text-center">Lượt đặt</th>
+                                    <th class="text-end">Doanh thu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.TopServices.Count; i++)
+                                {
+                                    var service = Model.TopServices[i];
+                                    <tr>
+                                        <td><strong>@(i + 1)</strong></td>
+                                        <td>@service.ServiceName</td>
+                                        <td>@service.Price.ToString("N0") ₫</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-primary">@service.TotalBookings</span>
+                                        </td>
+                                        <td class="text-end">
+                                            <strong class="text-success">
+                                                @service.TotalRevenue.ToString("N0") ₫
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-3">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0"><i class="fas fa-star"></i> Top 10 Bác Sĩ</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Bác sĩ</th>
+                                    <th class="text-center">Tổng lịch</th>
+                                    <th class="text-center">Hoàn thành</th>
+                                    <th class="text-center">Tỷ lệ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.TopDoctors.Count; i++)
+                                {
+                                    var doctor = Model.TopDoctors[i];
+                                    var rate = doctor.TotalAppointments > 0
+                                    ? (double)doctor.CompletedAppointments / doctor.TotalAppointments * 100
+                                    : 0;
+                                    <tr>
+                                        <td><strong>@(i + 1)</strong></td>
+                                        <td>BS. @doctor.DoctorName</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-primary">@doctor.TotalAppointments</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-success">@doctor.CompletedAppointments</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="progress" style="height: 20px;">
+                                                <div class="progress-bar bg-success"
+                                                     role="progressbar"
+                                                     style="width: @rate%">
+                                                    @rate.ToString("F1")%
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Department Statistics -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0"><i class="fas fa-hospital"></i> Thống Kê Theo Khoa</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="departmentChart" height="60"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Revenue Chart
+        const ctx1 = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4'],
+                datasets: [{
+                    label: 'Doanh thu (VNĐ)',
+                    data: [5000000, 7000000, 6500000, 8000000],
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y.toLocaleString('vi-VN') + ' VNĐ';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return (value/1000000) + 'M';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Status Pie Chart
+        const ctx2 = document.getElementById('statusChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: [@Html.Raw(string.Join(",", Model.AppointmentStats.Keys.Select(k => $"'{k}'")))],
+                datasets: [{
+                    data: [@string.Join(",", Model.AppointmentStats.Values)],
+                    backgroundColor: [
+                        'rgba(255, 193, 7, 0.8)',
+                        'rgba(40, 167, 69, 0.8)',
+                        'rgba(23, 162, 184, 0.8)',
+                        'rgba(220, 53, 69, 0.8)',
+                        'rgba(108, 117, 125, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Department Chart
+        const ctx3 = document.getElementById('departmentChart').getContext('2d');
+        new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                labels: [@Html.Raw(string.Join(",", Model.DepartmentStats.Keys.Select(k => $"'{k}'")))],
+                datasets: [{
+                    label: 'Số lượng lịch hẹn',
+                    data: [@string.Join(",", Model.DepartmentStats.Values)],
+                    backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        });
+
+        function exportToExcel() {
+            alert('Chức năng xuất Excel đang được phát triển');
+        }
+
+        function exportToPDF() {
+            alert('Chức năng xuất PDF đang được phát triển');
+        }
+    </script>
+}
