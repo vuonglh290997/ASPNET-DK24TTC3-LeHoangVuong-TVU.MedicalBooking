@@ -1,0 +1,333 @@
+﻿@page
+@model TVU.MedicalBooking.Pages.Admin.DashboardModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">
+                <i class="fas fa-chart-line"></i> Dashboard Quản Trị
+            </h2>
+        </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card text-white bg-primary shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-white-50">Tổng bệnh nhân</h6>
+                            <h2 class="mb-0">@Model.TotalPatients</h2>
+                        </div>
+                        <i class="fas fa-users fa-3x opacity-50"></i>
+                    </div>
+                </div>
+                <div class="card-footer bg-primary border-top border-white-50">
+                    <a asp-page="/Admin/Users" class="text-white text-decoration-none">
+                        Xem chi tiết <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card text-white bg-success shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-white-50">Lịch hẹn hôm nay</h6>
+                            <h2 class="mb-0">@Model.TodayAppointments</h2>
+                        </div>
+                        <i class="fas fa-calendar-day fa-3x opacity-50"></i>
+                    </div>
+                </div>
+                <div class="card-footer bg-success border-top border-white-50">
+                    <a asp-page="/Admin/Appointments" class="text-white text-decoration-none">
+                        Xem chi tiết <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card text-white bg-warning shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-white-50">Chờ duyệt</h6>
+                            <h2 class="mb-0">@Model.PendingAppointments</h2>
+                        </div>
+                        <i class="fas fa-clock fa-3x opacity-50"></i>
+                    </div>
+                </div>
+                <div class="card-footer bg-warning border-top border-white-50">
+                    <a asp-page="/Admin/Appointments" asp-route-status="Pending" class="text-white text-decoration-none">
+                        Xem chi tiết <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card text-white bg-info shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-white-50">Doanh thu tháng</h6>
+                            <h2 class="mb-0">@Model.MonthlyRevenue.ToString("N0")</h2>
+                            <small>VNĐ</small>
+                        </div>
+                        <i class="fas fa-dollar-sign fa-3x opacity-50"></i>
+                    </div>
+                </div>
+                <div class="card-footer bg-info border-top border-white-50">
+                    <a asp-page="/Admin/Reports" class="text-white text-decoration-none">
+                        Xem báo cáo <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <div class="col-lg-8 mb-3">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Thống Kê Lịch Hẹn Theo Trạng Thái</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="appointmentStatusChart" height="80"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mb-3">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-pie-chart"></i> Trạng Thái Lịch Hẹn</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="statusPieChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Services & Doctors -->
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-3">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-star"></i> Top 5 Dịch Vụ</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Dịch vụ</th>
+                                    <th class="text-center">Lượt đặt</th>
+                                    <th class="text-end">Doanh thu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var service in Model.TopServices)
+                                {
+                                    <tr>
+                                        <td>@service.ServiceName</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-primary">@service.TotalBookings</span>
+                                        </td>
+                                        <td class="text-end">
+                                            <strong>@service.TotalRevenue.ToString("N0") ₫</strong>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-3">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0"><i class="fas fa-user-md"></i> Top 5 Bác Sĩ</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Bác sĩ</th>
+                                    <th class="text-center">Tổng lịch</th>
+                                    <th class="text-center">Hoàn thành</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var doctor in Model.TopDoctors)
+                                {
+                                    <tr>
+                                        <td>BS. @doctor.DoctorName</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-primary">@doctor.TotalAppointments</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-success">@doctor.CompletedAppointments</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0"><i class="fas fa-history"></i> Hoạt Động Gần Đây</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Thời gian</th>
+                                    <th>Người dùng</th>
+                                    <th>Hành động</th>
+                                    <th>Mô tả</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var log in Model.RecentLogs.Take(10))
+                                {
+                                    <tr>
+                                        <td>
+                                            <small>@log.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                                        </td>
+                                        <td>User #@log.UserId</td>
+                                        <td>
+                                            <span class="badge bg-@(GetActionBadgeClass(log.Action))">
+                                                @log.Action
+                                            </span>
+                                        </td>
+                                        <td>@log.Description</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-3">
+                        <a asp-page="/Admin/AuditLogs" class="btn btn-outline-secondary">
+                            <i class="fas fa-list"></i> Xem Tất Cả Logs
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetActionBadgeClass(string action)
+    {
+        return action switch
+        {
+            "Login" => "success",
+            "Logout" => "secondary",
+            "CreateAppointment" => "primary",
+            "ApproveAppointment" => "success",
+            "RejectAppointment" => "danger",
+            "CreatePayment" => "info",
+            _ => "secondary"
+        };
+    }
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Appointment Status Bar Chart
+        const ctx1 = document.getElementById('appointmentStatusChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: [@Html.Raw(string.Join(",", Model.AppointmentStats.Keys.Select(k => $"'{k}'")))],
+                datasets: [{
+                    label: 'Số lượng',
+                    data: [@string.Join(",", Model.AppointmentStats.Values)],
+                    backgroundColor: [
+                        'rgba(255, 193, 7, 0.8)',
+                        'rgba(40, 167, 69, 0.8)',
+                        'rgba(23, 162, 184, 0.8)',
+                        'rgba(220, 53, 69, 0.8)',
+                        'rgba(108, 117, 125, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 193, 7)',
+                        'rgb(40, 167, 69)',
+                        'rgb(23, 162, 184)',
+                        'rgb(220, 53, 69)',
+                        'rgb(108, 117, 125)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+
+        // Status Pie Chart
+        const ctx2 = document.getElementById('statusPieChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: [@Html.Raw(string.Join(",", Model.AppointmentStats.Keys.Select(k => $"'{k}'")))],
+                datasets: [{
+                    data: [@string.Join(",", Model.AppointmentStats.Values)],
+                    backgroundColor: [
+                        'rgba(255, 193, 7, 0.8)',
+                        'rgba(40, 167, 69, 0.8)',
+                        'rgba(23, 162, 184, 0.8)',
+                        'rgba(220, 53, 69, 0.8)',
+                        'rgba(108, 117, 125, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+}
