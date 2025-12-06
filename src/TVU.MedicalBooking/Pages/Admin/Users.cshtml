@@ -1,0 +1,245 @@
+﻿@page
+@model TVU.MedicalBooking.Pages.Admin.UsersModel
+@{
+    ViewData["Title"] = "Quản lý người dùng";
+}
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2><i class="fas fa-users"></i> Quản Lý Người Dùng</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createUserModal">
+                <i class="fas fa-user-plus"></i> Thêm Người Dùng
+            </button>
+        </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Vai trò</label>
+                    <select name="role" class="form-select" onchange="this.form.submit()">
+                        <option value="">Tất cả</option>
+                        <option value="Admin" selected="@(Model.FilterRole == "Admin")">Admin</option>
+                        <option value="Doctor" selected="@(Model.FilterRole == "Doctor")">Bác sĩ</option>
+                        <option value="Patient" selected="@(Model.FilterRole == "Patient")">Bệnh nhân</option>
+                        <option value="Staff" selected="@(Model.FilterRole == "Staff")">Nhân viên</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Trạng thái</label>
+                    <select name="status" class="form-select" onchange="this.form.submit()">
+                        <option value="">Tất cả</option>
+                        <option value="active" selected="@(Model.FilterStatus == "active")">Hoạt động</option>
+                        <option value="inactive" selected="@(Model.FilterStatus == "inactive")">Bị khóa</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Tìm kiếm</label>
+                    <input type="text" name="search" class="form-control"
+                           placeholder="Tên, email, số điện thoại..."
+                           value="@Model.SearchTerm" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i> Tìm
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Danh Sách Người Dùng (@Model.Users.Count)</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Users.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên đăng nhập</th>
+                                <th>Họ tên</th>
+                                <th>Email</th>
+                                <th>Số điện thoại</th>
+                                <th>Vai trò</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày tạo</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.Users)
+                            {
+                                <tr>
+                                    <td><strong>#@user.UserId</strong></td>
+                                    <td>@user.Username</td>
+                                    <td>@user.FullName</td>
+                                    <td>
+                                        <small>@user.Email</small>
+                                    </td>
+                                    <td>@user.PhoneNumber</td>
+                                    <td>
+                                        <span class="badge bg-@GetRoleBadgeClass(user.Role.RoleName)">
+                                            @user.Role.RoleName
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (user.IsActive)
+                                        {
+                                            <span class="badge bg-success">Hoạt động</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Bị khóa</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <small>@user.CreatedAt.ToString("dd/MM/yyyy")</small>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <button type="button" class="btn btn-info"
+                                                    onclick="viewUser(@user.UserId)">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-warning"
+                                                    onclick="editUser(@user.UserId)">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            @if (user.IsActive)
+                                            {
+                                                <button type="button" class="btn btn-danger"
+                                                        onclick="toggleUserStatus(@user.UserId, false)">
+                                                    <i class="fas fa-lock"></i>
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-success"
+                                                        onclick="toggleUserStatus(@user.UserId, true)">
+                                                    <i class="fas fa-unlock"></i>
+                                                </button>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-users-slash fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Không tìm thấy người dùng nào</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Create User Modal -->
+<div class="modal fade" id="createUserModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Thêm Người Dùng Mới</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" asp-page-handler="Create">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tên đăng nhập *</label>
+                            <input type="text" name="Username" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Họ và tên *</label>
+                            <input type="text" name="FullName" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email *</label>
+                            <input type="email" name="Email" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Số điện thoại</label>
+                            <input type="tel" name="PhoneNumber" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Mật khẩu *</label>
+                            <input type="password" name="Password" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Vai trò *</label>
+                            <select name="RoleName" class="form-select" required>
+                                <option value="">-- Chọn vai trò --</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Doctor">Bác sĩ</option>
+                                <option value="Patient">Bệnh nhân</option>
+                                <option value="Staff">Nhân viên</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Tạo Người Dùng
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetRoleBadgeClass(string role)
+    {
+        return role switch
+        {
+            "Admin" => "danger",
+            "Doctor" => "primary",
+            "Patient" => "success",
+            "Staff" => "info",
+            _ => "secondary"
+        };
+    }
+}
+
+@section Scripts {
+    <script>
+        function toggleUserStatus(userId, activate) {
+            const action = activate ? 'kích hoạt' : 'khóa';
+            if (confirm(`Bạn có chắc muốn ${action} người dùng này?`)) {
+                $.post('/Admin/Users?handler=ToggleStatus',
+                    { userId: userId, isActive: activate },
+                    function() {
+                        location.reload();
+                    }
+                );
+            }
+        }
+
+        function viewUser(userId) {
+            window.location.href = `/Admin/UserDetail?id=${userId}`;
+        }
+
+        function editUser(userId) {
+            window.location.href = `/Admin/EditUser?id=${userId}`;
+        }
+    </script>
+}
