@@ -1,0 +1,205 @@
+﻿@page
+@model TVU.MedicalBooking.Pages.Patient.CompleteProfileModel
+@{
+    ViewData["Title"] = "Hoàn thiện hồ sơ";
+    Layout = "_Layout";
+}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-edit"></i> Hoàn Thiện Hồ Sơ Bệnh Nhân
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle"></i> @Model.ErrorMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <div class="alert alert-info mb-4">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Lưu ý:</strong> Vui lòng điền đầy đủ thông tin để có thể đặt lịch khám bệnh.
+                        Thông tin của bạn sẽ được bảo mật tuyệt đối.
+                    </div>
+
+                    <form method="post">
+                        <h5 class="border-bottom pb-2 mb-3">
+                            <i class="fas fa-id-card"></i> Thông Tin Cá Nhân
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.FullName" class="form-label">
+                                    Họ và tên đầy đủ *
+                                </label>
+                                <input asp-for="Input.FullName" class="form-control"
+                                       placeholder="VD: Nguyễn Văn A" />
+                                <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.IdentityCard" class="form-label">
+                                    Số CMND/CCCD *
+                                </label>
+                                <input asp-for="Input.IdentityCard" class="form-control"
+                                       placeholder="VD: 001234567890" maxlength="20" />
+                                <span asp-validation-for="Input.IdentityCard" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.DateOfBirth" class="form-label">
+                                    Ngày sinh *
+                                </label>
+                                <input asp-for="Input.DateOfBirth" type="date"
+                                       class="form-control"
+                                       max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                <span asp-validation-for="Input.DateOfBirth" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.Gender" class="form-label">
+                                    Giới tính *
+                                </label>
+                                <select asp-for="Input.Gender" class="form-select">
+                                    <option value="">-- Chọn giới tính --</option>
+                                    <option value="Nam">Nam</option>
+                                    <option value="Nữ">Nữ</option>
+                                    <option value="Khác">Khác</option>
+                                </select>
+                                <span asp-validation-for="Input.Gender" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Address" class="form-label">
+                                Địa chỉ liên hệ *
+                            </label>
+                            <textarea asp-for="Input.Address" class="form-control" rows="2"
+                                      placeholder="VD: 123 Đường ABC, Quận 1, TP.HCM"></textarea>
+                            <span asp-validation-for="Input.Address" class="text-danger"></span>
+                        </div>
+
+                        <h5 class="border-bottom pb-2 mb-3 mt-4">
+                            <i class="fas fa-phone"></i> Thông Tin Liên Hệ
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.PhoneNumber" class="form-label">
+                                    Số điện thoại *
+                                </label>
+                                <input asp-for="Input.PhoneNumber" class="form-control"
+                                       placeholder="VD: 0912345678" />
+                                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.Email" class="form-label">
+                                    Email *
+                                </label>
+                                <input asp-for="Input.Email" type="email" class="form-control"
+                                       placeholder="VD: email@example.com" />
+                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <h5 class="border-bottom pb-2 mb-3 mt-4">
+                            <i class="fas fa-user-friends"></i> Liên Hệ Khẩn Cấp
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.EmergencyContact" class="form-label">
+                                    Tên người liên hệ khẩn cấp
+                                </label>
+                                <input asp-for="Input.EmergencyContact" class="form-control"
+                                       placeholder="VD: Nguyễn Văn B (Cha/Mẹ/Vợ/Chồng)" />
+                                <span asp-validation-for="Input.EmergencyContact" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Input.EmergencyPhone" class="form-label">
+                                    Số điện thoại khẩn cấp
+                                </label>
+                                <input asp-for="Input.EmergencyPhone" class="form-control"
+                                       placeholder="VD: 0987654321" />
+                                <span asp-validation-for="Input.EmergencyPhone" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <h5 class="border-bottom pb-2 mb-3 mt-4">
+                            <i class="fas fa-notes-medical"></i> Thông Tin Y Tế
+                        </h5>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.MedicalHistory" class="form-label">
+                                Tiền sử bệnh (nếu có)
+                            </label>
+                            <textarea asp-for="Input.MedicalHistory" class="form-control" rows="4"
+                                      placeholder="VD: Tiểu đường, huyết áp cao, dị ứng thuốc, phẫu thuật đã thực hiện..."></textarea>
+                            <span asp-validation-for="Input.MedicalHistory" class="text-danger"></span>
+                            <small class="text-muted">
+                                Thông tin này giúp bác sĩ có cái nhìn tổng quan về sức khỏe của bạn
+                            </small>
+                        </div>
+
+                        <div class="alert alert-warning mt-4">
+                            <i class="fas fa-shield-alt"></i>
+                            <strong>Cam kết bảo mật:</strong> Mọi thông tin cá nhân của bạn được mã hóa và bảo mật theo
+                            quy định của Luật Bảo vệ dữ liệu cá nhân. Chúng tôi không chia sẻ thông tin của bạn cho bên thứ ba.
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save"></i> Lưu Thông Tin
+                            </button>
+                            <a asp-page="/Account/Logout" class="btn btn-outline-secondary">
+                                <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function() {
+            // Auto format phone number
+            $('#Input_PhoneNumber, #Input_EmergencyPhone').on('input', function() {
+                var value = $(this).val().replace(/\D/g, '');
+                $(this).val(value);
+            });
+
+            // Auto format identity card
+            $('#Input_IdentityCard').on('input', function() {
+                var value = $(this).val().replace(/\D/g, '');
+                $(this).val(value);
+            });
+
+            // Validate date of birth
+            $('#Input_DateOfBirth').on('change', function() {
+                var dob = new Date($(this).val());
+                var today = new Date();
+                var age = today.getFullYear() - dob.getFullYear();
+
+                if (age < 0 || age > 150) {
+                    alert('Ngày sinh không hợp lệ');
+                    $(this).val('');
+                }
+            });
+        });
+    </script>
+}
