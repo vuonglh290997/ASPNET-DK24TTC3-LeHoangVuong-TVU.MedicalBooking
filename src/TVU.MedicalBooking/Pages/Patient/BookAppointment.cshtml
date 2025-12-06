@@ -1,0 +1,196 @@
+﻿@page
+@model TVU.MedicalBooking.Pages.Patient.BookAppointmentModel
+@{
+    ViewData["Title"] = "Đặt lịch khám";
+}
+<div class="container mt-4 mb-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-calendar-plus"></i> Đặt Lịch Khám Bệnh
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-circle"></i> @Model.ErrorMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <form method="post" id="bookingForm">
+                        <!-- Step 1: Chọn dịch vụ -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2">
+                                <span class="badge bg-primary">1</span> Chọn Dịch Vụ
+                            </h5>
+                            <div class="mb-3">
+                                <label asp-for="Input.ServiceId" class="form-label">
+                                    <i class="fas fa-stethoscope"></i> Dịch vụ khám *
+                                </label>
+                                <select asp-for="Input.ServiceId" class="form-select form-select-lg" id="serviceSelect">
+                                    <option value="">-- Chọn dịch vụ --</option>
+                                    @foreach (var service in Model.Services)
+                                    {
+                                        <option value="@service.ServiceId" data-price="@service.Price">
+                                            @service.ServiceName - @service.Price.ToString("N0") VNĐ
+                                        </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="Input.ServiceId" class="text-danger"></span>
+                            </div>
+
+                            <div id="serviceInfo" class="alert alert-info" style="display:none;">
+                                <h6>Thông tin dịch vụ:</h6>
+                                <p id="serviceDescription" class="mb-2"></p>
+                                <p class="mb-0"><strong>Giá:</strong> <span id="servicePrice"></span> VNĐ</p>
+                                <p class="mb-0"><strong>Thời gian:</strong> <span id="serviceDuration"></span> phút</p>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Chọn bác sĩ -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2">
+                                <span class="badge bg-primary">2</span> Chọn Bác Sĩ
+                            </h5>
+                            <div class="mb-3">
+                                <label asp-for="Input.DoctorId" class="form-label">
+                                    <i class="fas fa-user-md"></i> Bác sĩ *
+                                </label>
+                                <select asp-for="Input.DoctorId" class="form-select form-select-lg" id="doctorSelect">
+                                    <option value="">-- Chọn bác sĩ --</option>
+                                    @foreach (var doctor in Model.Doctors)
+                                    {
+                                        <option value="@doctor.DoctorId">
+                                            BS. @doctor.User.FullName - @doctor.Specialization
+                                        </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="Input.DoctorId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Chọn ngày và giờ -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2">
+                                <span class="badge bg-primary">3</span> Chọn Ngày và Giờ
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Input.AppointmentDate" class="form-label">
+                                        <i class="fas fa-calendar"></i> Ngày khám *
+                                    </label>
+                                    <input asp-for="Input.AppointmentDate" type="date"
+                                           class="form-control form-control-lg"
+                                           id="dateInput"
+                                           min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                    <span asp-validation-for="Input.AppointmentDate" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Input.TimeSlot" class="form-label">
+                                        <i class="fas fa-clock"></i> Giờ khám *
+                                    </label>
+                                    <select asp-for="Input.TimeSlot" class="form-select form-select-lg" id="timeSlotSelect">
+                                        <option value="">-- Chọn giờ --</option>
+                                    </select>
+                                    <span asp-validation-for="Input.TimeSlot" class="text-danger"></span>
+                                    <div id="loadingSlots" class="text-muted mt-2" style="display:none;">
+                                        <i class="fas fa-spinner fa-spin"></i> Đang tải khung giờ...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Lý do khám -->
+                        <div class="mb-4">
+                            <h5 class="border-bottom pb-2">
+                                <span class="badge bg-primary">4</span> Thông Tin Thêm
+                            </h5>
+                            <div class="mb-3">
+                                <label asp-for="Input.Reason" class="form-label">
+                                    <i class="fas fa-notes-medical"></i> Lý do khám
+                                </label>
+                                <textarea asp-for="Input.Reason" class="form-control" rows="4"
+                                          placeholder="Mô tả triệu chứng hoặc lý do cần khám..."></textarea>
+                                <span asp-validation-for="Input.Reason" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Summary -->
+                        <div class="alert alert-light border">
+                            <h5><i class="fas fa-info-circle"></i> Tóm tắt đặt lịch</h5>
+                            <ul class="mb-0">
+                                <li>Sau khi đặt lịch, bạn sẽ được chuyển đến trang thanh toán</li>
+                                <li>Vui lòng thanh toán qua QR code để hoàn tất đặt lịch</li>
+                                <li>Lịch hẹn của bạn sẽ được bác sĩ xem xét và duyệt</li>
+                            </ul>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-check"></i> Xác Nhận Đặt Lịch
+                            </button>
+                            <a asp-page="/Patient/Dashboard" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function() {
+            // Service selection handler
+            $('#serviceSelect').change(function() {
+                var selectedOption = $(this).find('option:selected');
+                if (selectedOption.val()) {
+                    $('#serviceInfo').show();
+                    var price = selectedOption.data('price');
+                    $('#servicePrice').text(price.toLocaleString('vi-VN'));
+                } else {
+                    $('#serviceInfo').hide();
+                }
+            });
+
+            // Load available time slots when doctor and date are selected
+            function loadTimeSlots() {
+                var doctorId = $('#doctorSelect').val();
+                var date = $('#dateInput').val();
+
+                if (doctorId && date) {
+                    $('#loadingSlots').show();
+                    $('#timeSlotSelect').prop('disabled', true);
+
+                    $.ajax({
+                        url: '/Patient/BookAppointment?handler=AvailableTimeSlots',
+                        data: { doctorId: doctorId, date: date },
+                        success: function(data) {
+                            $('#timeSlotSelect').html('<option value="">-- Chọn giờ --</option>');
+                            data.forEach(function(slot) {
+                                $('#timeSlotSelect').append('<option value="' + slot + '">' + slot + '</option>');
+                            });
+                            $('#loadingSlots').hide();
+                            $('#timeSlotSelect').prop('disabled', false);
+                        },
+                        error: function() {
+                            alert('Không thể tải khung giờ. Vui lòng thử lại.');
+                            $('#loadingSlots').hide();
+                            $('#timeSlotSelect').prop('disabled', false);
+                        }
+                    });
+                }
+            }
+
+            $('#doctorSelect, #dateInput').change(loadTimeSlots);
+        });
+    </script>
+}
